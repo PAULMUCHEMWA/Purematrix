@@ -6,7 +6,7 @@
       ".read": "root.child('users/'+auth.uid+'/active').val() === true",
       "$uid": {
         ".read": "auth != null && $uid === auth.uid",
-        ".write": "auth != null && (root.child('users/'+auth.uid+'/perms/users').val() === true || ($uid === auth.uid && !root.child('users').exists()))",
+        ".write": "auth != null && (root.child('users/'+auth.uid+'/perms/users').val() === true || ($uid === auth.uid && !root.child('users').exists()) || ($uid === auth.uid && !data.exists() && root.child('users').exists() && newData.child('active').val() === false && newData.child('status').val() === 'pending' && newData.child('role').val() === 'worker' && !newData.child('perms').exists()))",
         "pwDefault": {
           ".write": "auth != null && $uid === auth.uid"
         }
@@ -21,12 +21,7 @@
     "jobs": {
       ".read": "root.child('users/'+auth.uid+'/active').val() === true",
       "$id": {
-        ".write": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/jobs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true || (!data.exists() && newData.child('by').val() === auth.uid) || data.child('by').val() === auth.uid || data.child('assigned/'+auth.uid).val() === true)",
-        "assigned": {
-          "$u": {
-            ".write": "root.child('users/'+auth.uid+'/active').val() === true && $u === auth.uid"
-          }
-        }
+        ".write": "root.child('users/'+auth.uid+'/active').val() === true && ((data.exists() && (root.child('users/'+auth.uid+'/perms/jobs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true || data.child('assigned/'+auth.uid).val() === true || data.child('by').val() === auth.uid)) || (!data.exists() && (root.child('users/'+auth.uid+'/perms/addwork').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true) && newData.child('by').val() === auth.uid) || (root.child('users/'+auth.uid+'/perms/users').val() === true))"
       }
     },
     "updates": {
@@ -45,7 +40,7 @@
       }
     },
     "funds": {
-      ".read": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/accounts').val() === true || root.child('users/'+auth.uid+'/perms/seeMoney').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)",
+      ".read": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/accounts').val() === true || root.child('users/'+auth.uid+'/perms/cash').val() === true || root.child('users/'+auth.uid+'/perms/seeMoney').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)",
       "$uid": {
         ".read": "root.child('users/'+auth.uid+'/active').val() === true && $uid === auth.uid",
         ".write": "root.child('users/'+auth.uid+'/active').val() === true && root.child('users/'+auth.uid+'/perms/accounts').val() === true",
@@ -94,6 +89,33 @@
       "$id": {
         ".read": true,
         ".write": "auth != null && (root.child('users/'+auth.uid+'/perms/users').val() === true || !root.child('users').exists())"
+      }
+    },
+    "workshop": {
+      ".read": "root.child('users/'+auth.uid+'/active').val() === true",
+      "$id": {
+        ".write": "root.child('users/'+auth.uid+'/active').val() === true && ((data.exists() && (root.child('users/'+auth.uid+'/perms/jobs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true || data.child('by').val() === auth.uid || data.child('maker').val() === auth.uid || data.child('team/'+auth.uid).val() === true)) || (!data.exists() && (root.child('users/'+auth.uid+'/perms/addwork').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true) && newData.child('by').val() === auth.uid))"
+      }
+    },
+    "cashreq": {
+      ".read": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/accounts').val() === true || root.child('users/'+auth.uid+'/perms/cash').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)",
+      "$uid": {
+        ".read": "root.child('users/'+auth.uid+'/active').val() === true && $uid === auth.uid",
+        "$id": {
+          ".write": "root.child('users/'+auth.uid+'/active').val() === true && (($uid === auth.uid && !data.exists() && newData.child('by').val() === auth.uid && newData.child('status').val() === 'new') || ($uid === auth.uid && data.exists() && (newData.child('status').val() === data.child('status').val() || newData.child('status').val() === 'declined')) || root.child('users/'+auth.uid+'/perms/accounts').val() === true || root.child('users/'+auth.uid+'/perms/cash').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)"
+        }
+      }
+    },
+    "docs": {
+      ".read": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/docs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)",
+      "$id": {
+        ".write": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/docs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true) && (newData.exists() || root.child('users/'+auth.uid+'/perms/users').val() === true)"
+      }
+    },
+    "doccount": {
+      ".read": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/docs').val() === true || root.child('users/'+auth.uid+'/perms/users').val() === true)",
+      "$t": {
+        ".write": "root.child('users/'+auth.uid+'/active').val() === true && (root.child('users/'+auth.uid+'/perms/users').val() === true || (root.child('users/'+auth.uid+'/perms/docs').val() === true && newData.isNumber() && newData.val() === (data.exists() ? data.val() : 0) + 1))"
       }
     }
   }

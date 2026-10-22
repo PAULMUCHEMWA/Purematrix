@@ -24,6 +24,11 @@ The apiKey in `config.js` is not a secret; protection comes from the database ru
 
 
 ## User guide
+## Job categories and the Workshop
+Job categories: Anti-band door, Safes (with a size such as 40L, 60L, 100L or a custom size), Strongroom door, Archive doors, Vaults, Man trap doors, Safe relocation, Alarms, CCTV, Biometric access control, Key cabinets, Gun cabinets, Security screens, Automated sliding gates, Intelligent electronic security locks, Electronic boom gates.
+
+**Workshop** (menu, under Jobs & map) shows who is making what right now, grouped by worker. Anyone can add an item (what it is, size, who is making it), set its stage (Queued, Cutting & welding, Assembly, Finishing & paint, Ready for delivery, Delivered to site, Installed), a percentage, and upload photos of the current state. Link an item to a job and the job screen shows "What is being made for this job" with the maker and stage, so site staff can see whose safe or door is being fitted. Managers are notified of production updates.
+
 ## Signing in
 Everyone signs in with a **Login ID** and **password**. New accounts start with password **0000**; the app shows a yellow banner until the person changes it (Profile → Change password; 0000 is not accepted as the new password).
 
